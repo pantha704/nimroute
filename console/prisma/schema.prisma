@@ -20,6 +20,8 @@ model User {
   passwordHash    String?
   plan            Plan          @default(HOBBY)
   stripeCustomerId String?
+  razorpayCustomerId     String? @unique
+  razorpaySubscriptionId String? @unique
   litellmTeamId   String?       @unique // LiteLLM team_id provisioned at signup
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt

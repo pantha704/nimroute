@@ -19,8 +19,13 @@ Caddy (TLS)
 - **Admin surfaces** (LiteLLM admin API, Postgres, Redis) are Tailscale-only — never public.
 
 ## Stack
-- Console: Next.js 15 (App Router) · TypeScript · Prisma 6 + Postgres · better-auth · Stripe · QStash · zustand
+- Console: Next.js 15 (App Router) · TypeScript · Prisma 6 + Postgres · better-auth · Razorpay · QStash · zustand
 - Gateway: LiteLLM (`ghcr.io/berriai/litellm:main-stable`) · Postgres 16 · Redis 7
+
+## Known env wiring
+Razorpay subscriptions power the plan fee; per-token usage is metered from LiteLLM
+spend logs via the QStash usage-sync worker (`UsageSync` rows feed the cost dashboard).
+Set `RAZORPAY_*_PLAN_ID` (Hobby/Pro/Enterprise) once you create the plans in the dashboard.
 
 ## Quick start (dev)
 ```bash
@@ -31,8 +36,8 @@ curl http://localhost:4000/v1/models -H "Authorization: Bearer $LITELLM_MASTER_K
 ```
 
 ## Roadmap (ruflo-generated)
-1. Signup → auto-provision team + virtual key via LiteLLM admin API (core loop)
-2. Stripe metered billing (input/output per token) + QStash hourly usage-sync
+1. Signup → auto-provision team + virtual key via LiteLLM admin API (core loop) — DONE
+2. Razorpay subscription billing + QStash usage-sync metering — DONE
 3. Console dashboard (keys, per-key usage, cost-per-model, budget meter, cache hit-rate)
 4. Landing + pricing + docs quickstart
 5. Redis cache (per-team namespaced) → semantic cache (phase 2)
