@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Plan {
+  HOBBY
+  PRO
+  ENTERPRISE
+}
+
+model User {
+  id              String        @id @default(cuid())
+  email           String        @unique
+  name            String
+  passwordHash    String?
+  plan            Plan          @default(HOBBY)
+  stripeCustomerId String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  teams           Team[]
+  apiKeys         ApiKeyNote[]
+
+  @@map("user")
+}
+
+model Team {
+  id            String         @id @default(cuid())
+  name          String
+  ownerId       String
+  owner         User           @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  createdAt     DateTime       @default(now())
+  apiKeys       ApiKeyNote[]
+  usageSyncs    UsageSync[]
+  billingEvents BillingEvent[]
+
+  @@index([ownerId])
+  @@map("team")
+}
+
+model ApiKeyNote {
+  id           String    @id @default(cuid())
+  teamId       String
+  userId       String
+  liteLLMKeyId String    @unique
+  prefix       String
+  name         String
+  budgetPlan   Float?
+  revokedAt    DateTime?
+  createdAt    DateTime  @default(now())
+  team         Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([teamId])
+  @@map("api_key_note")
+}
+
+model UsageSync {
+  id          String   @id @default(cuid())
+  teamId      String
+  periodStart DateTime
+  periodEnd   DateTime
+  tokensIn    Int
+  tokensOut   Int
+  cost        Float
+  completedAt DateTime
+  team        Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@index([teamId])
+  @@map("usage_sync")
+}
+
+model BillingEvent {
+  id            String   @id @default(cuid())
+  teamId        String
+  type          String
+  stripeEventId String   @unique
+  createdAt     DateTime @default(now())
+  team          Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@index([teamId])
+  @@map("billing_event")
+}
