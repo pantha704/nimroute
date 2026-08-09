@@ -8,7 +8,7 @@ FROM node:22-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-# generate prisma client from schema (schema is in prisma/)
+# generate prisma client in the builder stage (dev deps incl. prisma CLI present)
 RUN npx prisma generate
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build

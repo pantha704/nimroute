@@ -80,7 +80,9 @@ export async function createTeamForUser(userId: string, plan: Plan): Promise<str
 
 export interface GeneratedKey {
   key: string;
+  /** LiteLLM returns the id inside `token_id` (not `key_id`). */
   key_id?: string;
+  token_id?: string;
   team_id?: string;
 }
 
@@ -90,7 +92,7 @@ export async function createVirtualKey(
   name: string,
   budget?: number,
 ): Promise<GeneratedKey> {
-  return request<GeneratedKey>("/key/generate", {
+  const res = await request<GeneratedKey>("/key/generate", {
     method: "POST",
     body: JSON.stringify({
       team_id: teamId,
@@ -98,6 +100,9 @@ export async function createVirtualKey(
       ...(budget !== undefined ? { max_budget: budget } : {}),
     }),
   });
+  // LiteLLM calls the persistent key identifier `token_id`; normalize it.
+  if (!res.key_id && res.token_id) res.key_id = res.token_id;
+  return res;
 }
 
 /** Revoke a virtual key (existing keys stay valid until TTL; new calls 401). */
@@ -124,7 +129,11 @@ export async function listTeamKeys(teamId: string): Promise<LitellmKeyInfo[]> {
     `/key/list?team_id=${encodeURIComponent(teamId)}`,
     { method: "GET" },
   );
-  return data.keys ?? [];
+  return (data.keys ?? []).map((k) =>
+    !k.key_id && "token_id" in (k as Record<string, unknown>)
+      ? { ...k, key_id: (k as unknown as { token_id?: string }).token_id }
+      : k,
+  );
 }
 
 export interface SpendLogItem {
@@ -136,6 +145,8 @@ export interface SpendLogItem {
   prompt_tokens?: number;
   completion_tokens?: number;
   startTime?: string;
+  /** Daily-aggregate shape from LiteLLM: { date, spend } per day */
+  date?: string;
 }
 
 export interface SpendLogsResponse {
@@ -144,8 +155,11 @@ export interface SpendLogsResponse {
 }
 
 /**
- * Pull spend logs for a team within [from, to] (ISO strings).
- * Token/cost ingestion used by the hourly QStash usage-sync worker.
+ * Pull spend for a team within [from, to] (ISO strings).
+ * LiteLLM returns a daily-aggregate array of { date, spend }; we sum spend
+ * into a single cost figure. Token counts are not in the aggregate — the
+ * per-request rows live under /spend/key/logs. We return cost + the raw
+ * rows so the usage-sync worker can store metered cost.
  */
 export async function getTeamSpend(
   teamId: string,
@@ -157,9 +171,12 @@ export async function getTeamSpend(
     start_date: from,
     end_date: to,
   });
-  return request<SpendLogsResponse>(`/global/spend/logs?${qs.toString()}`, {
+  const data = await request<unknown[]>(`/global/spend/logs?${qs.toString()}`, {
     method: "GET",
   });
+  const rows = (Array.isArray(data) ? data : []) as SpendLogItem[];
+  const totalSpend = rows.reduce((sum, r) => sum + (r.spend ?? 0), 0);
+  return { data: rows, total_spend: totalSpend };
 }
 
 /** Quick health check against the LiteLLM proxy. */
