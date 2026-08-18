@@ -1,59 +1,42 @@
 model_list:
-  - model_name: deepseek-v4-flash
+  - model_name: deepseek-v4-flash-0731
     litellm_params:
-      model: nvidia_nim/deepseek-ai/deepseek-v4-flash
+      model: nvidia_nim/deepseek-ai/deepseek-v4-flash-0731
       api_key: os.environ/NVIDIA_NIM_API_KEY_1
-      allowed_openai_params:
-        - reasoning_effort
+      allowed_openai_params: [reasoning_effort]
     model_info:
       mode: chat
-      input_cost_per_token: 0.00000045   # $0.45/M in (est. NIM pricing)
-      output_cost_per_token: 0.00000135  # $1.35/M out (est.)
+      input_cost_per_token: 0.00000045
+      output_cost_per_token: 0.00000135
       cache_read_input_token_cost: 0.000000045
       cache_creation_input_token_cost: 0.00000009
-  - model_name: glm-5.2
+  - model_name: deepseek-v4-flash-0731
     litellm_params:
-      model: nvidia_nim/z-ai/glm-5.2
+      model: nvidia_nim/deepseek-ai/deepseek-v4-flash-0731
       api_key: os.environ/NVIDIA_NIM_API_KEY_2
-      allowed_openai_params:
-        - reasoning_effort
+      allowed_openai_params: [reasoning_effort]
     model_info:
       mode: chat
-      input_cost_per_token: 0.00000060
-      output_cost_per_token: 0.00000180
-      cache_read_input_token_cost: 0.00000006
-      cache_creation_input_token_cost: 0.00000012
-  - model_name: deepseek-v4-pro
+      input_cost_per_token: 0.00000045
+      output_cost_per_token: 0.00000135
+      cache_read_input_token_cost: 0.000000045
+      cache_creation_input_token_cost: 0.00000009
+  - model_name: deepseek-v4-flash-0731
     litellm_params:
-      model: nvidia_nim/deepseek-ai/deepseek-v4-pro
+      model: nvidia_nim/deepseek-ai/deepseek-v4-flash-0731
       api_key: os.environ/NVIDIA_NIM_API_KEY_3
-      allowed_openai_params:
-        - reasoning_effort
+      allowed_openai_params: [reasoning_effort]
     model_info:
       mode: chat
-      input_cost_per_token: 0.00000120
-      output_cost_per_token: 0.00000360
-      cache_read_input_token_cost: 0.00000012
-      cache_creation_input_token_cost: 0.00000024
-  - model_name: minimax-m3
+      input_cost_per_token: 0.00000045
+      output_cost_per_token: 0.00000135
+      cache_read_input_token_cost: 0.000000045
+      cache_creation_input_token_cost: 0.00000009
+  - model_name: deepseek-v4-flash-0731
     litellm_params:
-      model: nvidia_nim/minimaxai/minimax-m3
+      model: nvidia_nim/deepseek-ai/deepseek-v4-flash-0731
       api_key: os.environ/NVIDIA_NIM_API_KEY_4
-      allowed_openai_params:
-        - reasoning_effort
-    model_info:
-      mode: chat
-      input_cost_per_token: 0.00000060
-      output_cost_per_token: 0.00000200
-      cache_read_input_token_cost: 0.00000006
-      cache_creation_input_token_cost: 0.00000012
-  - model_name: opencode-go
-    litellm_params:
-      model: openai/deepseek-v4-flash
-      api_key: os.environ/OPENCODE_GO_API_KEY
-      allowed_openai_params:
-        - reasoning_effort
-      api_base: https://opencode.ai/zen/go/v1
+      allowed_openai_params: [reasoning_effort]
     model_info:
       mode: chat
       input_cost_per_token: 0.00000045
@@ -61,25 +44,111 @@ model_list:
       cache_read_input_token_cost: 0.000000045
       cache_creation_input_token_cost: 0.00000009
 
+  - model_name: glm-5.2
+    litellm_params:
+      model: nvidia_nim/z-ai/glm-5.2
+      api_key: os.environ/NVIDIA_NIM_API_KEY_1
+      allowed_openai_params: [reasoning_effort]
+    model_info:
+      mode: chat
+      input_cost_per_token: 0.00000060
+      output_cost_per_token: 0.00000180
+      cache_read_input_token_cost: 0.00000006
+      cache_creation_input_token_cost: 0.00000012
+  - model_name: glm-5.2
+    litellm_params:
+      model: nvidia_nim/z-ai/glm-5.2
+      api_key: os.environ/NVIDIA_NIM_API_KEY_2
+      allowed_openai_params: [reasoning_effort]
+    model_info:
+      mode: chat
+      input_cost_per_token: 0.00000060
+      output_cost_per_token: 0.00000180
+      cache_read_input_token_cost: 0.00000006
+      cache_creation_input_token_cost: 0.00000012
+  - model_name: glm-5.2
+    litellm_params:
+      model: nvidia_nim/z-ai/glm-5.2
+      api_key: os.environ/NVIDIA_NIM_API_KEY_3
+      allowed_openai_params: [reasoning_effort]
+    model_info:
+      mode: chat
+      input_cost_per_token: 0.00000060
+      output_cost_per_token: 0.00000180
+      cache_read_input_token_cost: 0.00000006
+      cache_creation_input_token_cost: 0.00000012
+  - model_name: glm-5.2
+    litellm_params:
+      model: nvidia_nim/z-ai/glm-5.2
+      api_key: os.environ/NVIDIA_NIM_API_KEY_4
+      allowed_openai_params: [reasoning_effort]
+    model_info:
+      mode: chat
+      input_cost_per_token: 0.00000060
+      output_cost_per_token: 0.00000180
+      cache_read_input_token_cost: 0.00000006
+      cache_creation_input_token_cost: 0.00000012
+
+  - model_name: minimax-m3
+    litellm_params:
+      model: nvidia_nim/minimaxai/minimax-m3
+      api_key: os.environ/NVIDIA_NIM_API_KEY_1
+      allowed_openai_params: [reasoning_effort]
+    model_info:
+      mode: chat
+      input_cost_per_token: 0.00000060
+      output_cost_per_token: 0.00000200
+      cache_read_input_token_cost: 0.00000006
+      cache_creation_input_token_cost: 0.00000012
+  - model_name: minimax-m3
+    litellm_params:
+      model: nvidia_nim/minimaxai/minimax-m3
+      api_key: os.environ/NVIDIA_NIM_API_KEY_2
+      allowed_openai_params: [reasoning_effort]
+    model_info:
+      mode: chat
+      input_cost_per_token: 0.00000060
+      output_cost_per_token: 0.00000200
+      cache_read_input_token_cost: 0.00000006
+      cache_creation_input_token_cost: 0.00000012
+  - model_name: minimax-m3
+    litellm_params:
+      model: nvidia_nim/minimaxai/minimax-m3
+      api_key: os.environ/NVIDIA_NIM_API_KEY_3
+      allowed_openai_params: [reasoning_effort]
+    model_info:
+      mode: chat
+      input_cost_per_token: 0.00000060
+      output_cost_per_token: 0.00000200
+      cache_read_input_token_cost: 0.00000006
+      cache_creation_input_token_cost: 0.00000012
+  - model_name: minimax-m3
+    litellm_params:
+      model: nvidia_nim/minimaxai/minimax-m3
+      api_key: os.environ/NVIDIA_NIM_API_KEY_4
+      allowed_openai_params: [reasoning_effort]
+    model_info:
+      mode: chat
+      input_cost_per_token: 0.00000060
+      output_cost_per_token: 0.00000200
+      cache_read_input_token_cost: 0.00000006
+      cache_creation_input_token_cost: 0.00000012
+
 router_settings:
   routing_strategy: usage-based-routing
   num_retries: 1
   timeout: 30
-  fallbacks:
-    - deepseek-v4-flash: [opencode-go]
-    - glm-5.2: [opencode-go]
-    - deepseek-v4-pro: [opencode-go]
-    - minimax-m3: [opencode-go]
+  fallbacks: []
   context_window_fallbacks: []
   allowed_fails: 1
   cooldown_time: 60
   retry_after: 5
   retry_policy:
-    AuthenticationErrorRetries: 1   # 401/403 -> fail over to next deployment
+    AuthenticationErrorRetries: 1
     BadRequestErrorRetries: 0
     TimeoutErrorRetries: 1
-    RateLimitErrorRetries: 2        # 429 -> retry, then cooldown
-    InternalServerErrorRetries: 1   # 5xx -> retry, then cooldown
+    RateLimitErrorRetries: 2
+    InternalServerErrorRetries: 1
 
 litellm_settings:
   drop_params: false
